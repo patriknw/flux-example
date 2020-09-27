@@ -5,6 +5,8 @@ metadata:
     app: shoppingcartservice
   name: shoppingcartservice
   namespace: shopping
+  annotations:
+    fluxcd.io/automated: "true"
 spec:
   replicas: 1
   selector:
