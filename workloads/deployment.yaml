@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: shoppingcartservice
-          image: docker.io/patriknw/shopping-cart-service-scala:0.2-2-50bb15e4
+          image: docker.io/patriknw/shopping-cart-service-scala:0.2-2-50bb15e4  
           # remove for real clusters, useful for minikube
           #imagePullPolicy: Never
           readinessProbe:
@@ -54,25 +54,3 @@ spec:
             requests:
               cpu: "300m"
               memory: 128Mi
----
-kind: Role
-apiVersion: rbac.authorization.k8s.io/v1
-metadata:
-  name: pod-reader
-rules:
-  - apiGroups: [""]
-    resources: ["pods"]
-    verbs: ["get", "watch", "list"]
----
-kind: RoleBinding
-apiVersion: rbac.authorization.k8s.io/v1
-metadata:
-  name: read-pods
-subjects:
-  - kind: User
-    name: system:serviceaccount:shopping:default
-roleRef:
-  kind: Role
-  name: pod-reader
-  apiGroup: rbac.authorization.k8s.io
-
