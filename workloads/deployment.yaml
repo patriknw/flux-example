@@ -4,6 +4,7 @@ metadata:
   labels:
     app: shoppingcartservice
   name: shoppingcartservice
+  namespace: shopping
 spec:
   replicas: 2
   selector:
