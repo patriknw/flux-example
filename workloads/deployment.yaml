@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: shoppingcartservice
-          image: docker.io/patriknw/shopping-cart-service-scala:0.1-39-141c65c6-20200916-1227
+          image: docker.io/patriknw/shopping-cart-service-scala:0.2-1-2472dd18-20200924-1545
           # remove for real clusters, useful for minikube
           #imagePullPolicy: Never
           readinessProbe:
