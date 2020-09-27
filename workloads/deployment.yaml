@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: shoppingcartservice
+  name: shoppingcartservice
+  namespace: shopping
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: shoppingcartservice
+  template:
+    metadata:
+      labels:
+        app: shoppingcartservice
+    spec:
+      containers:
+        - name: shoppingcartservice
+          image: docker.io/patriknw/shopping-cart-service-scala:0.1-39-141c65c6-20200916-1227
+          # remove for real clusters, useful for minikube
+          #imagePullPolicy: Never
+          readinessProbe:
+            httpGet:
+              path: "/ready"
+              port: management
+            periodSeconds: 10
+            failureThreshold: 10
+            initialDelaySeconds: 20
+          livenessProbe:
+            httpGet:
+              path: "/alive"
+              port: management
+            periodSeconds: 10
+            failureThreshold: 10
+            initialDelaySeconds: 20
+          ports:
+            - name: management
+              containerPort: 8558
+              protocol: TCP
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          env:
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: REQUIRED_CONTACT_POINT_NR
+              value: "2"
+          resources:
+            limits:
+              memory: 512Mi
+            requests:
+              cpu: "300m"
+              memory: 128Mi
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: pod-reader
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "watch", "list"]
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: read-pods
+subjects:
+  - kind: User
+    name: system:serviceaccount:shopping:default
+roleRef:
+  kind: Role
+  name: pod-reader
+  apiGroup: rbac.authorization.k8s.io
+
